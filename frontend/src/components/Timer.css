@@ -1,0 +1,61 @@
+.timer-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  background: rgba(10, 12, 25, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+}
+
+.timer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.timer-icon {
+  font-size: 0.9rem;
+}
+
+.timer-display {
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  transition: color 0.5s ease;
+  flex: 1;
+}
+
+.timer-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.5s ease;
+}
+
+.timer-bar-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.1s linear, background 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Urgency states */
+.timer--danger .timer-display {
+  animation: timerPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

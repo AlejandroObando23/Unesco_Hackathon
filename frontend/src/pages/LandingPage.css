@@ -1,0 +1,312 @@
+.landing-page {
+  min-height: 100dvh;
+  background: #050814;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Background */
+.landing-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.3;
+  animation: landingOrbFloat 12s ease-in-out infinite;
+}
+
+.landing-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #667eea, transparent);
+  top: -150px; left: -150px;
+  animation-delay: 0s;
+}
+.landing-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #e94560, transparent);
+  top: 30%; right: -100px;
+  animation-delay: -4s;
+}
+.landing-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #4ecdc4, transparent);
+  bottom: -80px; left: 30%;
+  animation-delay: -8s;
+}
+
+.landing-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(102,126,234,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102,126,234,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@keyframes landingOrbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(25px, -25px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+/* Content */
+.landing-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  padding: 3rem 1.5rem 4rem;
+}
+
+/* Badge */
+.landing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(102, 126, 234, 0.12);
+  border: 1px solid rgba(102, 126, 234, 0.25);
+  border-radius: 100px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #a78bfa;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  animation: fadeSlideUp 0.4s ease;
+}
+
+/* Hero */
+.landing-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeSlideUp 0.4s ease 0.05s both;
+}
+
+.landing-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 900;
+  color: #e2e8f0;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0 0 0.25rem;
+}
+
+.landing-title-accent {
+  background: linear-gradient(135deg, #667eea, #e94560);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.landing-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 1.25rem;
+}
+
+.landing-desc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.landing-desc strong {
+  color: #e2e8f0;
+}
+
+/* Pills */
+.landing-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  animation: fadeSlideUp 0.4s ease 0.1s both;
+}
+
+.pill {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+/* Form */
+.landing-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  animation: fadeSlideUp 0.4s ease 0.15s both;
+}
+
+.landing-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+.landing-input-group {
+  position: relative;
+}
+
+.landing-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: #e2e8f0;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.landing-input::placeholder { color: #334155; }
+
+.landing-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.landing-input--error {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.12) !important;
+}
+
+.landing-input-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #ff6b6b;
+  margin-top: 0.35rem;
+}
+
+.landing-char-count {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: #334155;
+  pointer-events: none;
+}
+
+/* Start button */
+.landing-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 14px;
+  padding: 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.landing-btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.45);
+}
+
+.landing-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Leaderboard link */
+.landing-leaderboard-link {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 0.7rem;
+  font-size: 0.88rem;
+  color: #64748b;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  transition: all 0.2s;
+  margin-bottom: 2.5rem;
+  animation: fadeSlideUp 0.4s ease 0.2s both;
+}
+
+.landing-leaderboard-link:hover {
+  border-color: rgba(255,255,255,0.2);
+  color: #94a3b8;
+}
+
+/* How to play */
+.landing-howto {
+  animation: fadeSlideUp 0.4s ease 0.25s both;
+}
+
+.landing-howto-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.landing-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0;
+}
+
+.landing-step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.landing-step strong { color: #e2e8f0; }
+
+.step-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}

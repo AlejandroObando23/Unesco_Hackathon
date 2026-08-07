@@ -1,0 +1,34 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider  = "prisma-client-py"
+  interface = "asyncio"
+}
+
+model Publication {
+  id            Int      @id @default(autoincrement())
+  text_content  String
+  media_url     String?
+  is_real       Boolean
+  mil_tip       String
+  category      String?
+  author_name   String?
+  author_handle String?
+  likes_count   Int      @default(0)
+  created_at    DateTime @default(now())
+}
+
+model LeaderboardEntry {
+  id           Int      @id @default(autoincrement())
+  player_name  String
+  score        Int
+  correct      Int
+  wrong        Int
+  omitted      Int
+  accuracy_pct Float
+  duration_s   Int
+  created_at   DateTime @default(now())
+}
