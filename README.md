@@ -2,14 +2,18 @@
 
 > Simulador de Alfabetización Mediática e Informacional (MIL/AMI) desarrollado para el Hackathon UNESCO.
 
-## 📐 Arquitectura
+## 📐 Arquitectura de Microservicios
+
+El proyecto cuenta con una arquitectura de microservicios con tres capas independientes:
 
 ```
-React (Vite)  →  FastAPI (Python)  →  Prisma ORM  →  Supabase/PostgreSQL
-   Capa 1            Capa 2            Capa 3            Capa 4
+React (Vite)  ↔  FastAPI (Backend Logic)  ↔  FastAPI + Prisma (Database API)  ↔  Supabase
+   Puerto 5173         Puerto 8000                  Puerto 8001
 ```
 
-## 🚀 Setup Rápido
+## 🚀 Setup Rápido con Docker
+
+El proyecto está dockerizado. Cada capa tiene su propio `Dockerfile` y `docker-compose.yml`.
 
 ### 1. Clonar y navegar al proyecto
 
@@ -17,63 +21,34 @@ React (Vite)  →  FastAPI (Python)  →  Prisma ORM  →  Supabase/PostgreSQL
 cd Hackathon_Unesco
 ```
 
-### 2. Configurar Supabase
+### 2. Configurar Base de Datos (Supabase)
 
 1. Crea un proyecto en [supabase.com](https://supabase.com)
-2. Ve a **Settings → API** y copia:
-   - `Project URL` → `VITE_SUPABASE_URL` / `SUPABASE_URL`
-   - `anon public key` → `VITE_SUPABASE_ANON_KEY`
-   - `service_role secret key` → `SUPABASE_SERVICE_ROLE_KEY`
-3. Ve a **Settings → API → JWT Settings** y copia el **JWT Secret** → `SUPABASE_JWT_SECRET`
-4. Ve a **Settings → Database → Connection String → URI** → `DATABASE_URL`
-5. Habilita **Email Auth** en **Authentication → Providers**
-6. Crea un Storage Bucket llamado `post-media` (público) para imágenes
+2. Ve a **Settings → Database → Connection String → URI** → `DATABASE_URL`
+3. Agrega la variable en `database/.env`.
 
-### 3. Backend
+### 3. Levantar los Servicios
 
+**Paso 1: Database API (Persistencia de Datos)**
+```bash
+cd database
+docker-compose up --build -d
+```
+Estará disponible en: `http://localhost:8001` (Documentación API en `/docs`)
+
+**Paso 2: Backend (Lógica del Juego)**
 ```bash
 cd backend
-
-# Crear entorno virtual
-python -m venv .venv
-.venv\Scripts\activate          # Windows
-# source .venv/bin/activate    # Linux/Mac
-
-# Instalar dependencias
-pip install -r requirements.txt
-
-# Configurar variables de entorno
-copy .env.example .env
-# Edita .env con tus credenciales de Supabase
-
-# Generar el cliente Prisma y crear tablas en Supabase
-prisma generate
-prisma db push
-
-# Poblar la base de datos con posts de ejemplo
-python prisma/seed.py
-
-# Iniciar el servidor de desarrollo
-uvicorn app.main:app --reload
+docker-compose up --build -d
 ```
+Estará disponible en: `http://localhost:8000` (Documentación API en `/docs`)
 
-El backend estará disponible en: `http://localhost:8000`
-Documentación API: `http://localhost:8000/docs`
-
-### 4. Frontend
-
+**Paso 3: Frontend (Interfaz Web)**
 ```bash
 cd frontend
-
-# Configurar variables de entorno
-copy .env.local.example .env.local
-# Edita .env.local con tus credenciales
-
-# Iniciar el servidor de desarrollo
-npm run dev
+docker-compose up --build -d
 ```
-
-El frontend estará disponible en: `http://localhost:5173`
+Estará disponible en: `http://localhost:5173`
 
 ---
 
@@ -81,54 +56,62 @@ El frontend estará disponible en: `http://localhost:5173`
 
 ```
 Hackathon_Unesco/
-├── frontend/                    # Capa 1 — React + Vite
+├── frontend/                    # Capa 1 — React + Vite (Puerto 5173)
 │   ├── src/
-│   │   ├── pages/               # LoginPage, RegisterPage, GamePage, ResultsPage
-│   │   ├── components/          # PostCard, Timer, DecisionBar, Scoreboard
-│   │   ├── hooks/               # useAuth, useGameState
-│   │   ├── services/            # supabase.js, api.js
-│   │   └── App.jsx              # Router + PrivateRoute
-│   └── index.html
+│   ├── Dockerfile
+│   └── docker-compose.yml
 │
-└── backend/                     # Capa 2 + 3 — FastAPI + Prisma
-    ├── app/
-    │   ├── main.py              # FastAPI entrypoint + CORS
-    │   ├── routers/             # posts.py, game.py
-    │   ├── schemas/             # post.py, game.py (Pydantic)
-    │   ├── services/            # auth.py, evaluation.py (Motor MIL)
-    │   └── db/client.py         # Prisma singleton
-    └── prisma/
-        ├── schema.prisma        # User, Publication, GameSession
-        └── seed.py              # 15 posts de ejemplo
+├── backend/                     # Capa 2 — Lógica de negocio (FastAPI, Puerto 8000)
+│   ├── app/
+│   │   ├── main.py              # Entrypoint 
+│   │   ├── routers/             # posts.py, game.py (Consume Database API vía httpx)
+│   │   └── services/            # evaluation.py (Motor MIL)
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+└── database/                    # Capa 3 — API de Persistencia (FastAPI + Prisma, Puerto 8001)
+    ├── main.py                  # Endpoints de DB
+    ├── prisma/
+    │   ├── schema.prisma        
+    │   └── seed.py              # Script de poblado de la base de datos
+    ├── Dockerfile
+    └── docker-compose.yml
 ```
 
-## 🔌 API Endpoints
+## 🔌 API Endpoints Principales
 
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `GET` | `/health` | Health check | ❌ |
-| `GET` | `/api/posts/` | Feed de publicaciones (sin is_real) | ✅ JWT |
-| `POST` | `/api/game/submit` | Enviar decisiones + obtener reporte MIL | ✅ JWT |
-| `GET` | `/api/game/sessions` | Historial de partidas | ✅ JWT |
+### Backend API (Puerto 8000)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/health` | Health check |
+| `GET` | `/api/posts/` | Feed de publicaciones para el jugador |
+| `POST` | `/api/game/submit` | Enviar decisiones + obtener reporte MIL |
+| `GET` | `/api/leaderboard` | Obtener tabla de clasificación |
+
+### Database API (Puerto 8001)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/health` | Health check |
+| `GET` | `/api/publications` | Obtener todos los posts (Interno) |
+| `POST` | `/api/publications/batch` | Obtener posts específicos (Interno) |
+| `POST` | `/api/leaderboard` | Guardar puntaje (Interno) |
+| `GET` | `/api/leaderboard` | Obtener puntajes (Interno) |
 
 ## 🎮 Requisitos implementados
 
 | REQ | Descripción | Implementación |
 |-----|-------------|----------------|
-| REQ001 | Iniciar Sesión | Supabase Auth SDK (`signInWithPassword`) |
-| REQ002 | Crear Cuenta | Supabase Auth SDK (`signUp`) |
-| REQ003 | Recuperar Contraseña | Supabase Auth SDK (`resetPasswordForEmail`) |
-| REQ004 | Gestionar Publicaciones | Modelo `Publication` en Prisma + seed |
-| REQ005 | Gestionar Partida | Modelo `GameSession` + `GET /api/game/sessions` |
-| REQ006 | Monitorear Partida | Timer 5min + validación anti-trampa en backend |
-| REQ007 | Reporte y Consejos MIL | Motor de evaluación → `mil_tips` por post fallado |
+| REQ001 | Gestionar Publicaciones | Modelo `Publication` vía Database API |
+| REQ002 | Gestionar Partida | API de juego y evaluación asíncrona |
+| REQ003 | Monitorear Partida | Timer 5min + validación anti-trampa en backend |
+| REQ004 | Reporte y Consejos MIL | Motor de evaluación → `mil_tips` por post fallado |
+| REQ005 | Leaderboard | Guardado de puntuación general |
 
 ## 👥 Equipo de 4 personas — División sugerida
 
 | Dev | Área |
 |-----|------|
-| Dev 1 | Backend: FastAPI + motor de evaluación |
-| Dev 2 | Base de datos: Prisma schema + seed + Supabase config |
-| Dev 3 | Frontend: Autenticación (Login, Register, Reset) |
-| Dev 4 | Frontend: Feed del juego (PostCard, Timer, ResultsPage) |
-"# Unesco_Hackathon" 
+| Dev 1 | Backend API: Reglas del juego y endpoints de frontend |
+| Dev 2 | Database API: Prisma schema, migraciones y endpoints internos |
+| Dev 3 | Frontend: Componentes principales (PostCard, Timer, ResultsPage) |
+| Dev 4 | Frontend: Leaderboard y DevOps (Docker-compose) |
