@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import Toast from './Toast'
 import './PostCard.css'
 
 const categoryLabels = {
@@ -8,6 +10,11 @@ const categoryLabels = {
 }
 
 export default function PostCard({ post, index, total }) {
+  const [isLiked, setIsLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(post?.likes_count || 0)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+
   if (!post) return null
 
   const categoryInfo = categoryLabels[post.category] || { label: 'Publicación', color: '#94a3b8' }
@@ -15,8 +22,32 @@ export default function PostCard({ post, index, total }) {
   const name = post.author_name || 'Usuario'
   const initials = name.slice(0, 2).toUpperCase()
 
+  const handleLikeClick = () => {
+    if (!isLiked) {
+      setIsLiked(true)
+      setLikeCount(likeCount + 1)
+    } else {
+      setIsLiked(false)
+      setLikeCount(likeCount - 1)
+    }
+  }
+
+  const handleDisabledClick = (actionName) => {
+    setToastMessage(`La acción "${actionName}" no es requerida para este desafío.`)
+    setShowToast(true)
+  }
+
+
   return (
     <article className="post-card">
+      {/* Toast Notification for disabled actions */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          duration={2500}
+          onDismiss={() => setShowToast(false)}
+        />
+      )}
       {/* Header */}
       <div className="post-header">
         <div className="post-avatar" aria-label={`Avatar de ${name}`}>
@@ -32,6 +63,12 @@ export default function PostCard({ post, index, total }) {
         >
           {categoryInfo.label}
         </span>
+        {/* TODO: Replace with actual menu icon image when available
+            Location: frontend/src/assets/icons/menu-dots.svg or .png
+            Currently showing as three dots emoji */}
+        <button className="post-menu-btn" title="Más opciones">
+          ⋯
+        </button>
       </div>
 
       {/* Content */}
@@ -53,10 +90,82 @@ export default function PostCard({ post, index, total }) {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Social Interaction Bar (Instagram-style) */}
+      <div className="post-social-actions">
+        {/* Like button */}
+        <button
+          className={`social-action-btn like-btn ${isLiked ? 'liked' : ''}`}
+          onClick={handleLikeClick}
+          aria-pressed={isLiked}
+          title={isLiked ? 'No me gusta' : 'Me gusta'}
+        >
+          {/* TODO: Replace with actual like icon images when available
+              Location: frontend/src/assets/icons/like-empty.svg (for unlike state)
+                        frontend/src/assets/icons/like-filled.svg (for liked state)
+              Current state: Using emoji ❤️ / 🤍 as placeholder */}
+          <span className="icon">{isLiked ? '❤️' : '🤍'}</span>
+        </button>
+
+        {/* Comment button (disabled - no action required) */}
+        <button
+          className="social-action-btn comment-btn"
+          disabled
+          onClick={() => handleDisabledClick('Comentar')}
+          title="Comentar (no requerido para este desafío)"
+        >
+          {/* TODO: Replace with actual comment icon image when available
+              Location: frontend/src/assets/icons/comment.svg or .png
+              Current state: Using emoji 💬 as placeholder */}
+          <span className="icon">💬</span>
+        </button>
+
+        {/* Share button (disabled - no action required) */}
+        <button
+          className="social-action-btn share-btn"
+          disabled
+          onClick={() => handleDisabledClick('Compartir')}
+          title="Compartir (no requerido para este desafío)"
+        >
+          {/* TODO: Replace with actual share icon image when available
+              Location: frontend/src/assets/icons/share.svg or .png
+              Current state: Using emoji 📤 as placeholder */}
+          <span className="icon">📤</span>
+        </button>
+
+        {/* Send/Report button - opens modal */}
+        <button
+          className="social-action-btn send-btn"
+          title="Reportar publicación sospechosa"
+          onClick={() => {
+            // TODO: Trigger report modal here
+            // For now, this will be handled by parent component or separate logic
+            console.log('Report button clicked for post:', post.id)
+          }}
+        >
+          {/* TODO: Replace with actual send icon image when available
+              Location: frontend/src/assets/icons/send.svg or .png
+              Current state: Using emoji 📬 as placeholder */}
+          <span className="icon">📬</span>
+        </button>
+
+        {/* Save button (disabled - no action required) */}
+        <button
+          className="social-action-btn save-btn"
+          disabled
+          onClick={() => handleDisabledClick('Guardar')}
+          title="Guardar (no requerido para este desafío)"
+        >
+          {/* TODO: Replace with actual bookmark icon image when available
+              Location: frontend/src/assets/icons/bookmark.svg or .png
+              Current state: Using emoji 🔖 as placeholder */}
+          <span className="icon">🔖</span>
+        </button>
+      </div>
+
+      {/* Engagement stats and CTA */}
       <div className="post-footer">
         <div className="post-engagement">
-          <span className="post-likes">❤️ {post.likes_count?.toLocaleString() || 0}</span>
+          <span className="post-likes">{likeCount.toLocaleString()} likes</span>
           <span className="post-counter">{index + 1} / {total}</span>
         </div>
         <p className="post-cta">¿Confías en esta publicación?</p>
@@ -64,3 +173,4 @@ export default function PostCard({ post, index, total }) {
     </article>
   )
 }
+

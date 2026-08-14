@@ -5,6 +5,7 @@ import PostCard from '../components/PostCard'
 import DecisionBar from '../components/DecisionBar'
 import Timer from '../components/Timer'
 import Scoreboard from '../components/Scoreboard'
+import ProgressBreadcrumb from '../components/ProgressBreadcrumb'
 import './GamePage.css'
 
 export default function GamePage() {
@@ -92,6 +93,9 @@ export default function GamePage() {
           </button>
         </div>
       </header>
+
+      {/* New: Progress Breadcrumb Navigation */}
+      <ProgressBreadcrumb step="game" currentIndex={currentIndex} totalPosts={totalPosts} />
 
       <Timer timeLeft={timeLeft} />
 

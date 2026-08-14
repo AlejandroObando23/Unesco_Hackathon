@@ -1,0 +1,50 @@
+# Propuesta de Rediseño de Interfaz y Usabilidad (Frontend)
+
+> **Restricción Técnica General:** Todos los cambios se implementarán exclusivamente en la capa de presentación (Frontend / CSS / UI) reutilizando las tecnologías y componentes disponibles. **No se realizarán modificaciones en la base de datos ni en los endpoints del backend existente.**
+
+---
+
+## 1. Rediseño de la Pantalla de Acceso (Login)
+
+* **Propósito:** Optimizar la distribución espacial de la pantalla de inicio para reducir la sobrecarga cognitiva, aplicando principios de organización y balance visual.
+* **Descripción del cambio:** Se implementará una maquetación en dos columnas basada en una rejilla (*Grid* o *Flexbox*):
+  * **Mitad izquierda:** Reservada exclusivamente para el campo de entrada de usuario. Al aislarlo con amplios márgenes en blanco, se mejora la claridad visual y el enfoque en la tarea inmediata.
+  * **Mitad derecha:** Mostrará un arte conceptual estático o mensaje de bienvenida dinámico (cargado localmente como asset del cliente), sirviendo como un anclaje estético que disminuye la rigidez del formulario.
+* **Impacto en Backend:** Ninguno. Se consume la misma API de autenticación actual.
+
+---
+
+## 2. Sistema de Navegación e "Ilusión de Progreso"
+
+* **Propósito:** Proporcionar un contexto espacial constante y alimentar la percepción de avance continuo en el juego.
+* **Descripción de la dinámica:** Indicador visual de progreso (*breadcrumbs*) en la cabecera.
+* **Esquema visual:**
+  $$\text{Inicio} \rightarrow \text{Slide 1} \rightarrow \text{Slide 2}$$
+  * **Estado actual:** Resaltado con color de alto contraste.
+  * **Pasos completados y futuros:** Atenuados (*grayed out*).
+* **Impacto en Backend:** Ninguno. Se maneja al 100% mediante el estado local de la aplicación en el navegador (`step` / `currentState`).
+
+---
+
+## 3. Dinámica Interactiva de Red Social en Simulaciones
+
+* **Propósito:** Evaluar y educar mediante una metáfora interactiva de red social (tipo Instagram), promoviendo la exploración libre e intuitiva.
+* **Descripción:** Barra de interacciones estilo móvil con los botones: *Me gusta*, *Comentar*, *Compartir*, *Enviar* y *Guardar*.
+* **Lógica de botones e integración:**
+  * **Botón "Me gusta" (Like):** Ejecuta la validación directa del contenido reutilizando la llamada HTTP que actualmente procesa la respuesta.
+  * **Botón "Tres puntos" (...):** Despliega un menú modal para reportar publicaciones e instruir al juego para avanzar de nivel.
+  * **Botones inactivos (*Comentar, Compartir, Enviar, Guardar*):** Permanecen visibles para mantener la fidelidad visual, pero sus eventos son capturados en el cliente sin enviar peticiones HTTP al servidor.
+
+---
+
+## 4. Reglas de Usabilidad e Interacción (Frontend)
+
+1. **Micro-retroalimentación (Micro-feedback):**
+   * Al interactuar con botones no requeridos (*Comentar, Compartir*), se desplegará una notificación flotante (*Toast* o *Tooltip*) de 2.5 segundos: *"Función no requerida para este desafío"*.
+   * Previene la frustración del usuario sin requerir programación en el servidor.
+2. **Atenuación Contextual (*Gray out*):**
+   * Si en un escenario específico la acción de reportar o dar *Like* no aplica, el botón correspondiente adoptará la clase CSS `.disabled` (`opacity: 0.3; pointer-events: none;`).
+3. **Consistencia en Modales:**
+   * El modal desencadenado por el botón "..." mantendrá el mismo patrón de cierre en todos los *slides* (botón "X" en la esquina superior y cierre al hacer clic en el fondo opaco).
+4. **Espacio en Blanco en Login:**
+   * Se evitarán líneas divisorias marcadas en el contenedor del Login, utilizando el margen negativo/positivo para separar los datos de la imagen.

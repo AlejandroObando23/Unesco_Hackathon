@@ -58,13 +58,135 @@
   66% { transform: translate(-20px, 15px) scale(0.95); }
 }
 
-/* Content */
+/* Content - SPLIT LAYOUT (2 COLUMNS) */
 .landing-content {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 500px;
-  padding: 3rem 1.5rem 4rem;
+  padding: 2rem;
+}
+
+.landing-content-split {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 2rem 1.5rem;
+}
+
+.landing-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Left Column - Form Input */
+.landing-column-left {
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Right Column - Visual Art */
+.landing-column-right {
+  justify-content: center;
+  gap: 2rem;
+}
+
+.landing-art-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-art-placeholder {
+  width: 100%;
+  max-width: 350px;
+  aspect-ratio: 300 / 400;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: fadeSlideUp 0.4s ease 0.1s both;
+}
+
+.landing-art-svg {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+}
+
+/* Hero section (right side) */
+.landing-hero-right {
+  text-align: center;
+  animation: fadeSlideUp 0.4s ease 0.15s both;
+}
+
+.landing-title-right {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #e2e8f0;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 0 0 0.25rem;
+}
+
+.landing-subtitle-right {
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+
+.landing-desc-right {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.landing-desc-right strong {
+  color: #e2e8f0;
+}
+
+/* Pills (right side) */
+.landing-pills-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  animation: fadeSlideUp 0.4s ease 0.2s both;
+}
+
+/* Responsive: Below 900px, stack columns vertically */
+@media (max-width: 900px) {
+  .landing-content-split {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 2rem;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  .landing-column-left,
+  .landing-column-right {
+    justify-content: flex-start;
+  }
+
+  .landing-art-placeholder {
+    max-width: 300px;
+  }
+
+  .landing-title-right {
+    font-size: 2rem;
+  }
 }
 
 /* Badge */
@@ -263,8 +385,10 @@
 }
 
 /* How to play */
-.landing-howto {
+.landing-howto,
+.landing-howto-section {
   animation: fadeSlideUp 0.4s ease 0.25s both;
+}
 }
 
 .landing-howto-title {

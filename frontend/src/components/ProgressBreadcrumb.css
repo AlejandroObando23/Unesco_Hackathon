@@ -1,0 +1,180 @@
+/* Progress Breadcrumb Navigation */
+
+.progress-breadcrumb {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem;
+  background: rgba(10, 12, 25, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  width: 100%;
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.breadcrumb-item-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Breadcrumb Item */
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  letter-spacing: 0.03em;
+}
+
+/* Active step */
+.breadcrumb-item--active {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: rgba(102, 126, 234, 0.4);
+  color: #667eea;
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.2);
+  animation: breadcrumbPulse 0.6s ease-in-out;
+}
+
+/* Completed step */
+.breadcrumb-item--completed {
+  background: rgba(78, 205, 196, 0.1);
+  border-color: rgba(78, 205, 196, 0.3);
+  color: #4ecdc4;
+}
+
+/* Future step */
+.breadcrumb-item--future {
+  opacity: 0.5;
+}
+
+.breadcrumb-icon {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-label {
+  white-space: nowrap;
+}
+
+/* Connecting line between breadcrumbs */
+.breadcrumb-line {
+  width: 20px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s;
+}
+
+.breadcrumb-line--completed {
+  background: linear-gradient(90deg, #667eea, #4ecdc4);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+.breadcrumb-line--pending {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Micro Progress (for game step) */
+.breadcrumb-micro-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.micro-progress-text {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.micro-progress-bar {
+  width: 100%;
+  max-width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.micro-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 2px;
+}
+
+@keyframes breadcrumbPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .breadcrumb-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .breadcrumb-item-wrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .breadcrumb-item-wrapper:nth-child(2) {
+    order: 1;
+    width: auto;
+  }
+
+  .breadcrumb-item-wrapper:nth-child(3) {
+    order: 2;
+    width: auto;
+  }
+
+  .breadcrumb-item-wrapper:nth-child(4) {
+    order: 3;
+    width: auto;
+  }
+
+  .breadcrumb-item-wrapper:nth-child(5) {
+    order: 4;
+    width: auto;
+  }
+
+  .breadcrumb-line {
+    display: none;
+  }
+
+  .breadcrumb-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .breadcrumb-icon {
+    font-size: 1rem;
+  }
+
+  .micro-progress-bar {
+    max-width: 150px;
+  }
+}
