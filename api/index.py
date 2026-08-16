@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 
 # We must import Prisma inside the function or globally but initialize it correctly
-from prisma import Prisma
+from api.prisma_client import Prisma
 
 load_dotenv()
 
