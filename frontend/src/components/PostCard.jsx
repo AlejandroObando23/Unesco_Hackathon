@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Toast from './Toast'
+import { useTranslation } from 'react-i18next'
 import './PostCard.css'
 
 const categoryLabels = {
@@ -10,6 +11,7 @@ const categoryLabels = {
 }
 
 export default function PostCard({ post, index, total }) {
+  const { t, i18n } = useTranslation()
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post?.likes_count || 0)
   const [showToast, setShowToast] = useState(false)
@@ -17,10 +19,17 @@ export default function PostCard({ post, index, total }) {
 
   if (!post) return null
 
-  const categoryInfo = categoryLabels[post.category] || { label: 'Publicación', color: '#94a3b8' }
+  const catLabel = categoryLabels[post.category]?.label || 'Publicación'
+  const categoryInfo = { 
+    label: t(`results.${post.category}`, catLabel), 
+    color: categoryLabels[post.category]?.color || '#94a3b8' 
+  }
   const handle = post.author_handle || '@usuario'
   const name = post.author_name || 'Usuario'
   const initials = name.slice(0, 2).toUpperCase()
+
+  const isEn = i18n.language === 'en'
+  const textContent = isEn && post.text_content_en ? post.text_content_en : post.text_content
 
   const handleLikeClick = () => {
     if (!isLiked) {
@@ -73,7 +82,7 @@ export default function PostCard({ post, index, total }) {
 
       {/* Content */}
       <div className="post-body">
-        <p className="post-text">{post.text_content}</p>
+        <p className="post-text">{textContent}</p>
 
         {post.media_url && (
           <div className="post-media-wrapper">
@@ -168,7 +177,7 @@ export default function PostCard({ post, index, total }) {
           <span className="post-likes">{likeCount.toLocaleString()} likes</span>
           <span className="post-counter">{index + 1} / {total}</span>
         </div>
-        <p className="post-cta">¿Confías en esta publicación?</p>
+        <p className="post-cta">{t('post.cta', '¿Confías en esta publicación?')}</p>
       </div>
     </article>
   )

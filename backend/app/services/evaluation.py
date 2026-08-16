@@ -82,6 +82,7 @@ async def evaluate_session(
                 user_decision=decision.decision,
                 correct_answer="Real" if is_real else "Fake",
                 tip=pub["mil_tip"],
+                tip_en=pub.get("mil_tip_en"),
                 category=pub["category"],
             ))
 
@@ -115,10 +116,10 @@ def _is_decision_correct(decision: DecisionType, is_real: bool) -> bool:
 
 def _generate_feedback_message(accuracy: float) -> str:
     if accuracy >= 90:
-        return "¡Excelente! Eres un experto en detectar desinformación. El mundo digital necesita personas como tú."
+        return "results.feedback.excellent"
     elif accuracy >= 70:
-        return "¡Bien hecho! Tienes buenas habilidades de alfabetización mediática. Revisa los consejos para mejorar aún más."
+        return "results.feedback.good"
     elif accuracy >= 50:
-        return "Vas por buen camino, pero la desinformación puede ser engañosa. Estudia los consejos MIL para fortalecer tu criterio."
+        return "results.feedback.average"
     else:
-        return "El caos digital es un desafío. No te desanimes — la alfabetización mediática es una habilidad que se entrena. ¡Inténtalo de nuevo!"
+        return "results.feedback.poor"

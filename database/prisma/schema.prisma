@@ -9,16 +9,18 @@ generator client {
 }
 
 model Publication {
-  id            Int      @id @default(autoincrement())
-  text_content  String
-  media_url     String?
-  is_real       Boolean
-  mil_tip       String
-  category      String?
-  author_name   String?
-  author_handle String?
-  likes_count   Int      @default(0)
-  created_at    DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  text_content    String
+  text_content_en String
+  media_url       String?
+  is_real         Boolean
+  mil_tip         String
+  mil_tip_en      String
+  category        String?
+  author_name     String?
+  author_handle   String?
+  likes_count     Int      @default(0)
+  created_at      DateTime @default(now())
 }
 
 model LeaderboardEntry {

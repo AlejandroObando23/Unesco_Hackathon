@@ -12,6 +12,7 @@ class PublicationPublic(BaseModel):
     """
     id: int
     text_content: str
+    text_content_en: str
     media_url: Optional[str] = None
     category: Optional[str] = None
     author_name: Optional[str] = None
@@ -30,3 +31,4 @@ class PublicationFull(PublicationPublic):
     """
     is_real: bool
     mil_tip: str
+    mil_tip_en: str

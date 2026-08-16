@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import './LandingPage.css'
 
 export default function LandingPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [error, setError] = useState('')
 
@@ -11,11 +14,11 @@ export default function LandingPage() {
     e.preventDefault()
     const trimmed = name.trim()
     if (!trimmed) {
-      setError('Ingresa tu nombre o alias para continuar.')
+      setError(t('landing.errorEmpty'))
       return
     }
     if (trimmed.length > 30) {
-      setError('Máximo 30 caracteres.')
+      setError(t('landing.errorLength'))
       return
     }
     // Store in sessionStorage so GamePage can access it
@@ -25,6 +28,7 @@ export default function LandingPage() {
 
   return (
     <div className="landing-page">
+      <LanguageSwitcher />
       {/* Animated background */}
       <div className="landing-bg">
         <div className="landing-orb landing-orb-1" />
@@ -40,14 +44,14 @@ export default function LandingPage() {
           <form id="landing-form" onSubmit={handleStart} className="landing-form" noValidate>
           <div className="landing-input-group">
             <label htmlFor="player-name-input" className="landing-label">
-              Tu nombre o alias
+              {t('landing.labelName')}
             </label>
             <input
               id="player-name-input"
               type="text"
               value={name}
               onChange={(e) => { setName(e.target.value); setError('') }}
-              placeholder="ej: Ana, MediaDet3ct0r, Periodista..."
+              placeholder={t('landing.placeholder')}
               maxLength={30}
               autoComplete="off"
               autoFocus
@@ -58,7 +62,7 @@ export default function LandingPage() {
           </div>
 
           <button id="landing-start-btn" type="submit" className="landing-btn">
-            <span>🚀 Iniciar Simulación</span>
+            <span>{t('landing.startBtn')}</span>
           </button>
         </form>
 
@@ -68,7 +72,7 @@ export default function LandingPage() {
           className="landing-leaderboard-link"
           onClick={() => navigate('/leaderboard')}
         >
-          🏆 Ver tabla de líderes
+          {t('landing.leaderboardBtn')}
         </button>
         </div>
 
@@ -119,7 +123,7 @@ export default function LandingPage() {
                   fill="#e2e8f0"
                   opacity="0.7"
                 >
-                  Bienvenido a
+                  {t('landing.welcome')}
                 </text>
                 <text
                   x="150"
@@ -129,7 +133,7 @@ export default function LandingPage() {
                   fontWeight="bold"
                   fill="#667eea"
                 >
-                  TruthScroll
+                  {t('landing.title')}
                 </text>
                 <text
                   x="150"
@@ -139,7 +143,7 @@ export default function LandingPage() {
                   fill="#94a3b8"
                   opacity="0.6"
                 >
-                  Aprende a detectar
+                  {t('landing.learnToDetect')}
                 </text>
                 <text
                   x="150"
@@ -149,7 +153,7 @@ export default function LandingPage() {
                   fill="#94a3b8"
                   opacity="0.6"
                 >
-                  desinformación
+                  {t('landing.disinformation')}
                 </text>
               </svg>
             </div>
@@ -158,19 +162,15 @@ export default function LandingPage() {
               <h1 className="landing-title-right">
                 Truth<span className="landing-title-accent">Scroll</span>
               </h1>
-              <p className="landing-subtitle-right">Sifting the Digital Chaos</p>
-              <p className="landing-desc-right">
-                Tienes <strong>5 minutos</strong> para navegar un feed social y decidir
-                qué es real, qué es falso y qué debes reportar.
-                <br />¿Puedes vencer al caos digital?
-              </p>
+              <p className="landing-subtitle-right">{t('landing.subtitle')}</p>
+              <p className="landing-desc-right" dangerouslySetInnerHTML={{ __html: t('landing.desc') }}></p>
             </header>
 
             {/* Stats pills */}
             <div className="landing-pills-right">
-              <div className="pill">⏱ 5 min de juego</div>
-              <div className="pill">📰 15 publicaciones</div>
-              <div className="pill">📚 Tips MIL personalizados</div>
+              <div className="pill">{t('landing.pill1')}</div>
+              <div className="pill">{t('landing.pill2')}</div>
+              <div className="pill">{t('landing.pill3')}</div>
             </div>
           </div>
         </div>
@@ -178,35 +178,26 @@ export default function LandingPage() {
 
       {/* How to play (full width) */}
       <section className="landing-howto-section">
-          <h2 className="landing-howto-title">¿Cómo funciona?</h2>
+          <h2 className="landing-howto-title">{t('landing.howToTitle')}</h2>
           <ol className="landing-steps">
             <li className="landing-step">
               <span className="step-icon">👁</span>
-              <div>
-                <strong>Lee</strong> cada publicación del feed social
-              </div>
+              <div dangerouslySetInnerHTML={{ __html: t('landing.step1') }}></div>
             </li>
             <li className="landing-step">
               <span className="step-icon">🧠</span>
-              <div>
-                <strong>Decide</strong> si confías, la marcas como falsa o la reportas
-              </div>
+              <div dangerouslySetInnerHTML={{ __html: t('landing.step2') }}></div>
             </li>
             <li className="landing-step">
               <span className="step-icon">📊</span>
-              <div>
-                <strong>Recibe</strong> tu reporte MIL con consejos pedagógicos personalizados
-              </div>
+              <div dangerouslySetInnerHTML={{ __html: t('landing.step3') }}></div>
             </li>
             <li className="landing-step">
               <span className="step-icon">🏆</span>
-              <div>
-                <strong>Sube</strong> al leaderboard y compite con otros participantes
-              </div>
+              <div dangerouslySetInnerHTML={{ __html: t('landing.step4') }}></div>
             </li>
           </ol>
         </section>
       </div>
     )
-  )
 }

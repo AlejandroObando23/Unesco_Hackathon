@@ -47,6 +47,7 @@ class MilTipItem(BaseModel):
     user_decision: DecisionType
     correct_answer: Literal["Real", "Fake"]
     tip: str
+    tip_en: Optional[str] = None
     category: Optional[str] = None
 
 

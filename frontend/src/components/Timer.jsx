@@ -1,4 +1,5 @@
 import './Timer.css'
+import { useTranslation } from 'react-i18next'
 
 const TOTAL_MS = 5 * 60 * 1000
 
@@ -9,22 +10,23 @@ function formatTime(ms) {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
-function getTimerState(ms) {
+function getTimerState(ms, t) {
   const pct = ms / TOTAL_MS
-  if (pct > 0.5) return { color: '#4ecdc4', label: 'En tiempo', urgency: 'safe' }
-  if (pct > 0.2) return { color: '#fbbf24', label: 'Apresúrate', urgency: 'warning' }
-  return { color: '#ff6b6b', label: '¡Último minuto!', urgency: 'danger' }
+  if (pct > 0.5) return { color: '#4ecdc4', label: t('timer.safe', 'En tiempo'), urgency: 'safe' }
+  if (pct > 0.2) return { color: '#fbbf24', label: t('timer.warning', 'Apresúrate'), urgency: 'warning' }
+  return { color: '#ff6b6b', label: t('timer.danger', '¡Último minuto!'), urgency: 'danger' }
 }
 
 export default function Timer({ timeLeft }) {
+  const { t } = useTranslation()
   const progressPct = (timeLeft / TOTAL_MS) * 100
-  const { color, label, urgency } = getTimerState(timeLeft)
+  const { color, label, urgency } = getTimerState(timeLeft, t)
 
   return (
     <div className={`timer-container timer--${urgency}`} role="timer" aria-live="polite">
       <div className="timer-header">
         <span className="timer-icon">⏱</span>
-        <span className="timer-display" style={{ color }} aria-label={`Tiempo restante: ${formatTime(timeLeft)}`}>
+        <span className="timer-display" style={{ color }} aria-label={`${t('timer.remaining', 'Tiempo restante:')} ${formatTime(timeLeft)}`}>
           {formatTime(timeLeft)}
         </span>
         <span className="timer-label" style={{ color }}>{label}</span>

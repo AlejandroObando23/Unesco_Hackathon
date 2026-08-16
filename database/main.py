@@ -32,6 +32,7 @@ app = FastAPI(
 class PublicationPublic(BaseModel):
     id: int
     text_content: str
+    text_content_en: str
     media_url: Optional[str] = None
     category: Optional[str] = None
     author_name: Optional[str] = None
@@ -44,6 +45,7 @@ class PublicationPublic(BaseModel):
         return cls(
             id=pub.id,
             text_content=pub.text_content,
+            text_content_en=pub.text_content_en,
             media_url=pub.media_url,
             category=pub.category,
             author_name=pub.author_name,
@@ -55,12 +57,14 @@ class PublicationPublic(BaseModel):
 class PublicationInternal(PublicationPublic):
     is_real: bool
     mil_tip: str
+    mil_tip_en: str
     
     @classmethod
     def from_prisma(cls, pub):
         return cls(
             id=pub.id,
             text_content=pub.text_content,
+            text_content_en=pub.text_content_en,
             media_url=pub.media_url,
             category=pub.category,
             author_name=pub.author_name,
@@ -68,7 +72,8 @@ class PublicationInternal(PublicationPublic):
             likes_count=pub.likes_count,
             created_at=pub.created_at.isoformat(),
             is_real=pub.is_real,
-            mil_tip=pub.mil_tip
+            mil_tip=pub.mil_tip,
+            mil_tip_en=pub.mil_tip_en
         )
 
 class BatchRequest(BaseModel):

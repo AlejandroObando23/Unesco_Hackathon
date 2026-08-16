@@ -1,4 +1,5 @@
 import './DecisionBar.css'
+import { useTranslation } from 'react-i18next'
 
 const DECISIONS = [
   {
@@ -28,6 +29,7 @@ const DECISIONS = [
 ]
 
 export default function DecisionBar({ onDecision, disabled }) {
+  const { t } = useTranslation()
   return (
     <div className="decision-bar" role="group" aria-label="Opciones de decisión">
       {DECISIONS.map(({ id, value, icon, label, sublabel, className }) => (
@@ -37,11 +39,11 @@ export default function DecisionBar({ onDecision, disabled }) {
           className={`decision-btn ${className}`}
           onClick={() => onDecision(value)}
           disabled={disabled}
-          aria-label={`${label}: ${sublabel}`}
+          aria-label={`${t(`decision.${id}`, label)}: ${t(`decision.${id}_sub`, sublabel)}`}
         >
           <span className="decision-icon">{icon}</span>
-          <span className="decision-label">{label}</span>
-          <span className="decision-sublabel">{sublabel}</span>
+          <span className="decision-label">{t(`decision.${id}`, label)}</span>
+          <span className="decision-sublabel">{t(`decision.${id}_sub`, sublabel)}</span>
         </button>
       ))}
     </div>

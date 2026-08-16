@@ -5,11 +5,13 @@ import PostCard from '../components/PostCard'
 import DecisionBar from '../components/DecisionBar'
 import Timer from '../components/Timer'
 import Scoreboard from '../components/Scoreboard'
-import ProgressBreadcrumb from '../components/ProgressBreadcrumb'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import { useTranslation } from 'react-i18next'
 import './GamePage.css'
 
 export default function GamePage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   // Read player name from session storage (set on LandingPage)
   const playerName = sessionStorage.getItem('ts_player_name') || 'Jugador'
@@ -48,7 +50,7 @@ export default function GamePage() {
     return (
       <div className="game-loading">
         <div className="game-loading-spinner" />
-        <p>Cargando el feed del simulador...</p>
+        <p>{t('game.loading')}</p>
       </div>
     )
   }
@@ -59,7 +61,7 @@ export default function GamePage() {
         <span>⚠️</span>
         <p>{error}</p>
         <button onClick={() => navigate('/')} className="game-retry-btn">
-          Volver al inicio
+          {t('game.errorRetry')}
         </button>
       </div>
     )
@@ -69,13 +71,14 @@ export default function GamePage() {
     return (
       <div className="game-loading">
         <div className="game-loading-spinner" />
-        <p>Evaluando tus respuestas, <strong>{playerName}</strong>...</p>
+        <p dangerouslySetInnerHTML={{ __html: t('game.evaluating', { name: playerName }) }}></p>
       </div>
     )
   }
 
   return (
     <div className="game-page">
+      <LanguageSwitcher />
       <header className="game-header">
         <div className="game-header-inner">
           <div className="game-brand">
@@ -89,13 +92,10 @@ export default function GamePage() {
             onClick={endGame}
             aria-label="Terminar partida anticipadamente"
           >
-            Terminar
+            {t('game.endBtn')}
           </button>
         </div>
       </header>
-
-      {/* New: Progress Breadcrumb Navigation */}
-      <ProgressBreadcrumb step="game" currentIndex={currentIndex} totalPosts={totalPosts} />
 
       <Timer timeLeft={timeLeft} />
 
@@ -118,9 +118,9 @@ export default function GamePage() {
           ) : (
             <div className="game-feed-done">
               <span>🎉</span>
-              <p>¡Has visto todos los posts!</p>
+              <p>{t('game.done')}</p>
               <button id="game-submit-btn" className="game-submit-btn" onClick={endGame}>
-                Ver mis resultados
+                {t('game.resultsBtn')}
               </button>
             </div>
           )}

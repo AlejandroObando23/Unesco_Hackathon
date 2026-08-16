@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getPosts, submitGame } from '../services/api'
+import { useTranslation } from 'react-i18next'
 
 const GAME_DURATION_MS = 5 * 60 * 1000 // 5 minutes
 
 export function useGameState(playerName) {
+  const { t } = useTranslation()
   const [posts, setPosts] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [decisions, setDecisions] = useState([])
@@ -25,10 +27,10 @@ export function useGameState(playerName) {
     const load = async () => {
       try {
         const data = await getPosts()
-        setPosts(data)
+        setPosts(data.slice(0, 15))
         sessionStartRef.current = new Date().toISOString()
       } catch {
-        setError('No se pudo cargar el feed. Verifica tu conexión.')
+        setError(t('game.errorLoadFeed', 'No se pudo cargar el feed. Verifica tu conexión.'))
       } finally {
         setLoading(false)
       }
@@ -95,7 +97,7 @@ export function useGameState(playerName) {
       )
       setSessionResult(result)
     } catch {
-      setError('Error al enviar resultados. Intenta de nuevo.')
+      setError(t('game.errorSubmit', 'Error al enviar resultados. Intenta de nuevo.'))
     } finally {
       setSubmitting(false)
     }
@@ -115,8 +117,8 @@ export function useGameState(playerName) {
     // Reload posts
     setLoading(true)
     getPosts()
-      .then(setPosts)
-      .catch(() => setError('No se pudo cargar el feed.'))
+      .then((data) => setPosts(data.slice(0, 15)))
+      .catch(() => setError(t('game.errorLoadFeed', 'No se pudo cargar el feed.')))
       .finally(() => setLoading(false))
   }, [])
 

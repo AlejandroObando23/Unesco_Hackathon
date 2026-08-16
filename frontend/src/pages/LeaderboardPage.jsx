@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getLeaderboard } from '../services/api'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import './LeaderboardPage.css'
 
 const MEDALS = ['🥇', '🥈', '🥉']
@@ -11,16 +13,17 @@ function formatDuration(s) {
   return `${m}:${sec.toString().padStart(2, '0')}`
 }
 
-function timeAgo(dateStr) {
+function timeAgo(dateStr, t) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000)
-  if (diff < 60) return 'hace un momento'
-  if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`
-  if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`
-  return `hace ${Math.floor(diff / 86400)} días`
+  if (diff < 60) return t('time.justNow')
+  if (diff < 3600) return t('time.minutesAgo', { count: Math.floor(diff / 60) })
+  if (diff < 86400) return t('time.hoursAgo', { count: Math.floor(diff / 3600) })
+  return t('time.daysAgo', { count: Math.floor(diff / 86400) })
 }
 
 export default function LeaderboardPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -37,6 +40,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="lb-page">
+      <LanguageSwitcher />
       {/* Background */}
       <div className="lb-bg">
         <div className="lb-orb lb-orb-1" />
@@ -53,11 +57,11 @@ export default function LeaderboardPage() {
             onClick={() => navigate('/')}
             aria-label="Volver al inicio"
           >
-            ← Volver
+            ← {t('lead.backBtn')}
           </button>
           <div className="lb-title-group">
-            <h1 className="lb-title">🏆 Tabla de Líderes</h1>
-            <p className="lb-subtitle">TruthScroll — Sifting the Digital Chaos</p>
+            <h1 className="lb-title">🏆 {t('lead.title')}</h1>
+            <p className="lb-subtitle">{t('lead.subtitle')}</p>
           </div>
           <button
             id="lb-play-btn"
@@ -67,7 +71,7 @@ export default function LeaderboardPage() {
               navigate('/')
             }}
           >
-            Jugar
+            {t('lead.playBtn')}
           </button>
         </header>
 
@@ -87,7 +91,7 @@ export default function LeaderboardPage() {
                 >
                   <span className="podium-medal">{MEDALS[rank - 1]}</span>
                   <span className="podium-name">{entry.player_name}</span>
-                  <span className="podium-score">{entry.score} pts</span>
+                  <span className="podium-score">{entry.score} {t('results.pts', 'pts')}</span>
                   <div className="podium-bar" />
                   <span className="podium-rank-num">#{rank}</span>
                 </div>
@@ -101,7 +105,7 @@ export default function LeaderboardPage() {
           {loading ? (
             <div className="lb-loading">
               <div className="lb-spinner" />
-              <p>Cargando clasificación...</p>
+              <p>{t('lead.loading')}</p>
             </div>
           ) : error ? (
             <div className="lb-error">
@@ -113,13 +117,13 @@ export default function LeaderboardPage() {
           ) : entries.length === 0 ? (
             <div className="lb-empty">
               <span>🎮</span>
-              <p>¡Sé el primero en jugar y aparecer aquí!</p>
+              <p>{t('lead.empty')}</p>
               <button
                 id="lb-first-play-btn"
                 className="lb-cta-btn"
                 onClick={() => { sessionStorage.removeItem('ts_player_name'); navigate('/') }}
               >
-                Jugar ahora
+                {t('lead.playNow')}
               </button>
             </div>
           ) : (
@@ -128,12 +132,12 @@ export default function LeaderboardPage() {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Jugador</th>
-                    <th scope="col">Puntos</th>
-                    <th scope="col">Precisión</th>
-                    <th scope="col">Correctos</th>
-                    <th scope="col">Tiempo</th>
-                    <th scope="col">Cuando</th>
+                    <th scope="col">{t('lead.player')}</th>
+                    <th scope="col">{t('lead.points')}</th>
+                    <th scope="col">{t('lead.accuracy')}</th>
+                    <th scope="col">{t('lead.correct')}</th>
+                    <th scope="col">{t('lead.time')}</th>
+                    <th scope="col">{t('lead.when')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,7 +156,7 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="lb-cell-name">
                           {entry.player_name}
-                          {isCurrentPlayer && <span className="lb-you-badge">tú</span>}
+                          {isCurrentPlayer && <span className="lb-you-badge">{t('lead.you')}</span>}
                         </td>
                         <td className="lb-cell-score">{entry.score}</td>
                         <td className="lb-cell-accuracy">
@@ -169,7 +173,7 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="lb-cell-correct">{entry.correct}</td>
                         <td className="lb-cell-time">{formatDuration(entry.duration_s)}</td>
-                        <td className="lb-cell-when">{timeAgo(entry.created_at)}</td>
+                        <td className="lb-cell-when">{timeAgo(entry.created_at, t)}</td>
                       </tr>
                     )
                   })}
@@ -187,7 +191,7 @@ export default function LeaderboardPage() {
               className="lb-cta-btn"
               onClick={() => { sessionStorage.removeItem('ts_player_name'); navigate('/') }}
             >
-              🚀 Jugar de nuevo
+              🚀 {t('results.playAgain', 'Jugar de nuevo')}
             </button>
           </div>
         )}
